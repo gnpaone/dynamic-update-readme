@@ -1,9 +1,7 @@
 FROM golang:1.22 as builder
 
 WORKDIR /app
-COPY . /app
-
-WORKDIR /app/action
+COPY ./action /app
 
 RUN go get -d -v
 
