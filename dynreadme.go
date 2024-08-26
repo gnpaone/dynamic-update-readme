@@ -5,12 +5,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/willabides/mdtable"
+	table "github.com/gnpaone/dynamic-update-readme/helpers"
 )
 
 type Update struct{}
 
-func (u *Update) updateContent(readmePath, markerText, mdText, table, tableOptions string) error {
+func (u *Update) updateContent(readmePath, markerText, mdText, isTable, tableOptions string) error {
 	readmeContent, err := os.ReadFile(readmePath)
 	if err != nil {
 		return err
@@ -20,8 +20,7 @@ func (u *Update) updateContent(readmePath, markerText, mdText, table, tableOptio
 	endMarker := fmt.Sprintf("<!-- %s_END -->", markerText)
 
 	var updatedReadmeContent string
-	if table == "true" {
-		var mdArray []string
+	if isTable == "true" {
 		mdArray = strings.Split(mdText, ";")
 		options := parseTableOptions(tableOptions)
 
@@ -30,8 +29,8 @@ func (u *Update) updateContent(readmePath, markerText, mdText, table, tableOptio
 			data = append(data, strings.Split(md, ","))
 		}
 
-		updatedReadmeContent = replaceBetweenMarkers(string(readmeContent), startMarker, endMarker, fmt.Sprintf("%s\n%s\n%s", startMarker, string(mdtable.Generate(data, options...)), endMarker))
-	} else if table == "false" {
+		updatedReadmeContent = replaceBetweenMarkers(string(readmeContent), startMarker, endMarker, fmt.Sprintf("%s\n%s\n%s", startMarker, string(table.Generate(data, options...)), endMarker))
+	} else if isTable == "false" {
 		updatedReadmeContent = replaceBetweenMarkers(string(readmeContent), startMarker, endMarker, fmt.Sprintf("%s\n%s\n%s", startMarker, mdText, endMarker))
 	}
 
@@ -41,15 +40,15 @@ func (u *Update) updateContent(readmePath, markerText, mdText, table, tableOptio
 	return nil
 }
 
-func parseTableOptions(tableOptions string) []mdtable.Option {
-	var options []mdtable.Option
+func parseTableOptions(tableOptions string) []table.Option {
+	var options []table.Option
 	parts := strings.Split(tableOptions, ",")
 
 	for _, part := range parts {
 		switch {
 		case strings.HasPrefix(part, "align-"):
 			alignment := parseAlignment(strings.TrimPrefix(part, "align-"))
-			options = append(options, mdtable.Alignment(alignment))
+			options = append(options, table.Alignment(alignment))
 
 		case strings.HasPrefix(part, "col-"):
 			colParts := strings.Split(part, "-")
@@ -59,30 +58,82 @@ func parseTableOptions(tableOptions string) []mdtable.Option {
 				case "align":
 					if len(colParts) == 4 {
 						alignment := parseAlignment(colParts[3])
-						options = append(options, mdtable.ColumnAlignment(colNum, alignment))
+						options = append(options, table.ColumnAlignment(colNum, alignment))
 					}
 				case "w":
 					if len(colParts) == 4 {
 						width := parseColumnWidth(colParts[3])
-						options = append(options, mdtable.ColumnMinWidth(colNum, width))
+						options = append(options, table.ColumnMinWidth(colNum, width))
 					}
 				}
+			}
+
+		case strings.HasPrefix(part, "colH-"):
+			colHParts := strings.Split(part, "-")
+			if len(colHParts) >= 3 {
+				colHNum := parseColumnNumber(colHParts[1])
+				switch colHParts[2] {
+				case "align":
+					if len(colHParts) == 4 {
+						alignment := parseAlignment(colHParts[3])
+						options = append(options, table.ColumnHeaderAlignment(colHNum, alignment))
+					}
+				}
+			}
+
+		case strings.HasPrefix(part, "colT-"):
+			colTParts := strings.Split(part, "-")
+			if len(colTParts) >= 3 {
+				colTNum := parseColumnNumber(colTParts[1])
+				switch colTParts[2] {
+				case "align":
+					if len(colTParts) == 4 {
+						alignment := parseAlignment(colTParts[3])
+						options = append(options, table.ColumnTextAlignment(colTNum, alignment))
+					}
+				}
+			}
+
+		case strings.HasPrefix(part, "head-"):
+			headParts := strings.Split(part, "-")
+			if len(headParts) >= 2 {
+				switch headParts[1] {
+				case "align":
+					if len(headParts) == 3 {
+						alignment := parseAlignment(headParts[2])
+						options = append(options, table.HeaderAlignment(alignment))
+					}
+				}
+
+			}
+
+		case strings.HasPrefix(part, "text-"):
+			textParts := strings.Split(part, "-")
+			if len(textParts) >= 2 {
+				switch textParts[1] {
+				case "align":
+					if len(textParts) == 3 {
+						alignment := parseAlignment(textParts[2])
+						options = append(options, table.TextAlignment(alignment))
+					}
+				}
+
 			}
 		}
 	}
 	return options
 }
 
-func parseAlignment(alignment string) mdtable.Align {
+func parseAlignment(alignment string) table.Align {
 	switch alignment {
 	case "left":
-		return mdtable.AlignLeft
+		return table.AlignLeft
 	case "right":
-		return mdtable.AlignRight
+		return table.AlignRight
 	case "center":
-		return mdtable.AlignCenter
+		return table.AlignCenter
 	default:
-		return mdtable.AlignDefault
+		return table.AlignDefault
 	}
 }
 
