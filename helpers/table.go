@@ -1,3 +1,7 @@
+/*
+Package table generates markdown tables from string slices with formatting options for alignment and column width.
+
+*/
 package table
 
 import (
@@ -7,6 +11,7 @@ import (
 	runewidth "github.com/mattn/go-runewidth"
 )
 
+// Align is a value for markdown and text alignment
 type Align uint8
 
 // Align values
@@ -60,6 +65,7 @@ func (a Align) fillCell(s string, width, padding int) string {
 	return pad + s + pad
 }
 
+// Generate generates a markdown table.
 func Generate(data [][]string, options ...Option) []byte {
 	t := &table{
 		data: data,
@@ -135,6 +141,7 @@ func ColumnMinWidth(column, width int) Option {
 
 // End Options
 
+// table is a markdown table
 type table struct {
 	data             [][]string
 	mdAlignment      Align
