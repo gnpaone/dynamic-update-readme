@@ -14,7 +14,7 @@ func main() {
 	readmePath := os.Getenv("INPUT_README_PATH")
 	markerText := os.Getenv("INPUT_MARKER_TEXT")
 	mdText := os.Getenv("INPUT_MARKDOWN_TEXT")
-	table := os.Getenv("INPUT_TABLE")
+	isTable := os.Getenv("INPUT_TABLE")
 	tableOptions := os.Getenv("INPUT_TABLE_OPTIONS")
 	gitUsername := os.Getenv("INPUT_COMMIT_USER")
 	gitEmail := os.Getenv("INPUT_COMMIT_EMAIL")
@@ -26,7 +26,7 @@ func main() {
 
 	updater := dynreadme.Update{}
 
-	if err := updater.updateContent(readmePath, markerText, mdText, table, tableOptions); err != nil {
+	if err := updater.UpdateContent(readmePath, markerText, mdText, isTable, tableOptions); err != nil {
 		log.Fatalf("Failed to update README: %s", err)
 	}
 
@@ -37,39 +37,36 @@ func main() {
 
 func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush string) error {
 	safeCmd := exec.Command("git", "config", "--global", "--add", "safe.directory", "/github/workspace")
-	err = safeCmd.Run()
-	if err != nil {
-		return fmt.Errorf("Error setting safe directory %s", err)
+	if err := safeCmd.Run(); err != nil {
+		return fmt.Errorf("Error setting safe directory: %w", err)
 	}
 
 	nameCmd := exec.Command("git", "config", "user.name", gitUsername)
-	err = nameCmd.Run()
-	if err != nil {
-		return fmt.Errorf("Error setting git user %s", err)
+	if err := nameCmd.Run(); err != nil {
+		return fmt.Errorf("Error setting git user: %w", err)
 	}
 
 	emailCmd := exec.Command("git", "config", "user.email", gitEmail)
-	err = emailCmd.Run()
-	if err != nil {
-		return fmt.Errorf("Error setting git email %s", err)
+	if err := emailCmd.Run(); err != nil {
+		return fmt.Errorf("Error setting git email: %w", err)
 	}
 
 	statusCmd, err := exec.Command("git", "status").Output()
 	if err != nil {
-		return fmt.Errorf("Error getting status %s", err)
+		return fmt.Errorf("Error getting status: %w", err)
 	}
 
 	statusOutput := string(statusCmd)
 	if !strings.Contains(statusOutput, "nothing to commit") {
 		if err := exec.Command("git", "add", readmePath).Run(); err != nil {
-			return fmt.Errorf("Error adding to staging area %s", err)
+			return fmt.Errorf("Error adding to staging area: %w", err)
 		}
 		if err := exec.Command("git", "commit", "-m", commitMessage).Run(); err != nil {
-			return fmt.Errorf("Error commiting to repo %s", err)
+			return fmt.Errorf("Error committing to repo: %w", err)
 		}
 		if confirmAndPush == "true" {
 			if err := exec.Command("git", "push").Run(); err != nil {
-				return fmt.Errorf("Error pushing to repo %s", err)
+				return fmt.Errorf("Error pushing to repo: %w", err)
 			}
 		} else if confirmAndPush == "false" {
 			output := fmt.Sprintf("git_username=%s\ngit_email=%s\ncommit_message=%s\n", gitUsername, gitEmail, commitMessage)
