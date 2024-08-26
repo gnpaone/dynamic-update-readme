@@ -8,11 +8,8 @@ import (
 	table "github.com/gnpaone/dynamic-update-readme/helpers"
 )
 
-// Update is a type for updating readme content
-type Update struct{}
-
 // UpdateContent parses and updates content between markers
-func (u *Update) UpdateContent(readmePath, markerText, mdText, isTable, tableOptions string) error {
+func UpdateContent(readmePath, markerText, mdText, isTable, tableOptions string) error {
 	readmeContent, err := os.ReadFile(readmePath)
 	if err != nil {
 		return err
