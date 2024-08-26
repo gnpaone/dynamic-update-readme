@@ -3,13 +3,15 @@ FROM golang:1.22 as builder
 WORKDIR /app
 COPY . /app
 
+WORKDIR /app/action
+
 RUN go get -d -v
 
 # Statically compile our app for use in a scratch or debian buster container
 RUN CGO_ENABLED=0 go build -ldflags="-w -s" -v -o app .
 
 # using multi-stage build
-FROM debian:buster-slim
+FROM debian:bookworm-slim
 RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ca-certificates git bash && \
     rm -rf /var/lib/apt/lists/*
