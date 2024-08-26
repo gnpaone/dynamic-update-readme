@@ -1,0 +1,52 @@
+name: "Dynamic update Readme"
+description: "Update any content to GitHub profile's readme or any markdown dynamically"
+author: "Naveen Prashanth @gnpaone"
+inputs:
+  readme_path:
+    description: "Path of readme file"
+    default: "./README.md"
+    required: false
+  marker_text:
+    description: "Marker text to replace in readme file"
+    required: true
+  mdText:
+    description: "Markdown text to be updated"
+    required: true
+  table:
+    description: "If markdown text is a table"
+    default: "false"
+    required: false
+  table_options:
+    description: "Alignment options for table markdown"
+    required: false
+  commit_user:
+    description: "Git username"
+    default: "markdown-update-bot"
+    required: false
+  commit_email:
+    description: "Git user email"
+    default: "markdown-updater[bot]@github.com"
+    required: false
+  commit_message:
+    description: "Git commit message"
+    default: "Update readme with dynamic data"
+    required: false
+  confirm_and_push:
+    description: "Push commits to Github repo"
+    default: "true"
+    required: false
+outputs:
+  git_username:
+    description: "Committer username"
+  git_email:
+    description: "Committer email"
+  commit_message:
+    description: "Commit message"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+
+branding:
+  icon: 'save'
+  color: 'green'
