@@ -21,6 +21,7 @@ func (u *Update) updateContent(readmePath, markerText, mdText, table, tableOptio
 
 	var updatedReadmeContent string
 	if table == "true" {
+		var mdArray []string
 		mdArray = strings.Split(mdText, ";")
 		options := parseTableOptions(tableOptions)
 
