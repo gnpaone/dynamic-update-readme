@@ -19,12 +19,12 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Run lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-
       - name: Build
         run: |
           go get -d -v
           go build -v .
+
+      - name: Run lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
