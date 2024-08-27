@@ -30,7 +30,9 @@ func main() {
 		log.Fatalf("Failed to update README: %s", err)
 	}
 
-	updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush)
+	if err := updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush); err != nil {
+		log.Fatalf("Failed to update Git repository: %s", err)
+	}
 }
 
 func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush string) error {
@@ -68,7 +70,9 @@ func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndP
 			}
 		} else if confirmAndPush == "false" {
 			output := fmt.Sprintf("git_username=%s\ngit_email=%s\ncommit_message=%s\n", gitUsername, gitEmail, commitMessage)
-			appendToFile(os.Getenv("GITHUB_OUTPUT"), output)
+			if err := appendToFile(os.Getenv("GITHUB_OUTPUT"), output); err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 
