@@ -24,8 +24,6 @@ func main() {
 	}
 	confirmAndPush := os.Getenv("INPUT_CONFIRM_AND_PUSH")
 
-	// updater := dynreadme.Update{}
-
 	if err := dynreadme.UpdateContent(readmePath, markerText, mdText, isTable, tableOptions); err != nil {
 		log.Fatalf("Failed to update README: %s", err)
 	}
