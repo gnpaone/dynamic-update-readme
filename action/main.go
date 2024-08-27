@@ -31,9 +31,7 @@ func main() {
 		log.Fatalf("Failed to update README: %s", err)
 	}
 
-	return updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush); err != nil {
-		log.Fatal(err)
-	}
+	return updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush)
 }
 
 func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush string) error {
