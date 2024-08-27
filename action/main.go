@@ -6,9 +6,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"errors"
 
-	. "github.com/gnpaone/dynamic-update-readme"
+	"github.com/gnpaone/dynamic-update-readme"
 )
 
 func main() {
@@ -27,11 +26,11 @@ func main() {
 
 	// updater := dynreadme.Update{}
 
-	if err := UpdateContent(readmePath, markerText, mdText, isTable, tableOptions); err != nil {
+	if err := dynreadme.UpdateContent(readmePath, markerText, mdText, isTable, tableOptions); err != nil {
 		log.Fatalf("Failed to update README: %s", err)
 	}
 
-	return updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush)
+	updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush)
 }
 
 func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush string) error {
@@ -69,11 +68,11 @@ func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndP
 			}
 		} else if confirmAndPush == "false" {
 			output := fmt.Sprintf("git_username=%s\ngit_email=%s\ncommit_message=%s\n", gitUsername, gitEmail, commitMessage)
-			return appendToFile(os.Getenv("GITHUB_OUTPUT"), output)
+			appendToFile(os.Getenv("GITHUB_OUTPUT"), output)
 		}
 	}
 
-	// return nil
+	return nil
 }
 
 func appendToFile(filename, text string) error {
@@ -86,5 +85,5 @@ func appendToFile(filename, text string) error {
 	if _, err := file.WriteString(text); err != nil {
 		log.Fatalf("Error writing to file: %q", err)
 	}
-	// return nil
+	return nil
 }
