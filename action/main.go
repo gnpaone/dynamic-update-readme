@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"errors"
 
 	dynreadme "github.com/gnpaone/dynamic-update-readme"
 )
@@ -38,35 +39,35 @@ func main() {
 func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndPush string) error {
 	safeCmd := exec.Command("git", "config", "--global", "--add", "safe.directory", "/github/workspace")
 	if err := safeCmd.Run(); err != nil {
-		return fmt.Errorf("Error setting safe directory: %w", err)
+		return errors.New("Error setting safe directory: %w", err)
 	}
 
 	nameCmd := exec.Command("git", "config", "user.name", gitUsername)
 	if err := nameCmd.Run(); err != nil {
-		return fmt.Errorf("Error setting git user: %w", err)
+		return errors.New("Error setting git user: %w", err)
 	}
 
 	emailCmd := exec.Command("git", "config", "user.email", gitEmail)
 	if err := emailCmd.Run(); err != nil {
-		return fmt.Errorf("Error setting git email: %w", err)
+		return errors.New("Error setting git email: %w", err)
 	}
 
 	statusCmd, err := exec.Command("git", "status").Output()
 	if err != nil {
-		return fmt.Errorf("Error getting status: %w", err)
+		return errors.New("Error getting status: %w", err)
 	}
 
 	statusOutput := string(statusCmd)
 	if !strings.Contains(statusOutput, "nothing to commit") {
 		if err := exec.Command("git", "add", readmePath).Run(); err != nil {
-			return fmt.Errorf("Error adding to staging area: %w", err)
+			return errors.New("Error adding to staging area: %w", err)
 		}
 		if err := exec.Command("git", "commit", "-m", commitMessage).Run(); err != nil {
-			return fmt.Errorf("Error committing to repo: %w", err)
+			return errors.New("Error committing to repo: %w", err)
 		}
 		if confirmAndPush == "true" {
 			if err := exec.Command("git", "push").Run(); err != nil {
-				return fmt.Errorf("Error pushing to repo: %w", err)
+				return errors.New("Error pushing to repo: %w", err)
 			}
 		} else if confirmAndPush == "false" {
 			output := fmt.Sprintf("git_username=%s\ngit_email=%s\ncommit_message=%s\n", gitUsername, gitEmail, commitMessage)
@@ -80,12 +81,12 @@ func updateGitRepo(readmePath, commitMessage, gitUsername, gitEmail, confirmAndP
 func appendToFile(filename, text string) error {
 	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		return fmt.Errorf("Error opening file: %w", err)
+		return errors.New("Error opening file: %w", err)
 	}
 	defer file.Close()
 
 	if _, err := file.WriteString(text); err != nil {
-		return fmt.Errorf("Error writing to file: %w", err)
+		return errors.New("Error writing to file: %w", err)
 	}
 	return nil
 }
