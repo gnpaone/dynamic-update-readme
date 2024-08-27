@@ -25,4 +25,4 @@ jobs:
         git config user.name "github-bot"
         git config user.email "github[bot]@gnpaone.github.io"
         git tag v1.0.0
-        git push origin v1.0.0
+        git push origin v1.0.1
