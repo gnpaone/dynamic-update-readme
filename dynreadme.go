@@ -2,6 +2,7 @@ package dynreadme
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -20,8 +21,8 @@ func UpdateContent(readmePath, markerText, mdText, isTable, tableOptions string)
 
 	var updatedReadmeContent string
 	if isTable == "true" {
-		var mdArray []string
-		mdArray = strings.Split(mdText, ";")
+		// var mdArray []string
+		var mdArray = strings.Split(mdText, ";")
 		options := parseTableOptions(tableOptions)
 
 		var data [][]string
@@ -139,13 +140,17 @@ func parseAlignment(alignment string) table.Align {
 
 func parseColumnNumber(num string) int {
 	var colNum int
-	fmt.Sscanf(num, "%d", &colNum)
+	if _, err := fmt.Sscanf(num, "%d", &colNum); err != nil {
+		log.Fatalf("Error parsing column number: %s", err)
+    	}
 	return colNum
 }
 
 func parseColumnWidth(width string) int {
 	var w int
-	fmt.Sscanf(width, "%d", &w)
+	if _, err := fmt.Sscanf(width, "%d", &w); err != nil {
+		log.Fatalf("Error parsing column width: %s", err)
+    	}
 	return w
 }
 
