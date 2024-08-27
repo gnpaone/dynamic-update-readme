@@ -9,7 +9,7 @@ inputs:
   marker_text:
     description: "Marker text to replace in readme file"
     required: true
-  mdText:
+  markdown_text:
     description: "Markdown text to be updated"
     required: true
   table:
