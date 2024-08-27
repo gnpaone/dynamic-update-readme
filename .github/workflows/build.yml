@@ -24,17 +24,29 @@ jobs:
         with:
           golint-path: .
 
-      - name: Run advanced lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-
       - name: Build
         run: |
           go get -d -v
           go build -v .
 
-      # - name: Run advanced lint
-      #   uses: golangci/golangci-lint-action@v6
-      #   with:
-      #     version: latest
+      - name: Run advanced lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+
+      - name: Run lint
+        uses: Jerome1337/golint-action@v1.0.2
+        with:
+          golint-path: './action/...'
+
+      - name: Build
+        run: |
+          go get -d -v
+          go build -v .
+        working-directory: ./action
+
+      - name: Run advanced lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: ./action
