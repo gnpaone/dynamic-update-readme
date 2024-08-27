@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 
-	dynreadme "github.com/gnpaone/dynamic-update-readme"
+	"github.com/gnpaone/dynamic-update-readme"
 )
 
 func main() {
