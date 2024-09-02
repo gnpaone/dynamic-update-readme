@@ -6,6 +6,7 @@
 [![Issues](https://img.shields.io/github/issues/gnpaone/dynamic-update-readme?color=orange&style=flat-square)](https://github.com/gnpaone/dynamic-update-readme/issues)
 [![Go](https://img.shields.io/github/go-mod/go-version/gnpaone/dynamic-update-readme?color=maroon&style=flat-square)](https://github.com/gnpaone/dynamic-update-readme/blob/main/go.mod)
 [![Godoc](https://pkg.go.dev/badge/github.com/gnpaone/dynamic-update-readme.svg?utm_source=godoc)](https://godoc.org/github.com/gnpaone/dynamic-update-readme)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gnpaone/dynamic-update-readme?style=flat-square)](https://goreportcard.com/report/github.com/gnpaone/dynamic-update-readme)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-v1.0.2-undefined.svg?logo=github&logoColor=white&style=flat-square)](https://github.com/marketplace/actions/dynamic-update-readme)
 
 #### As a power user, automate the updating of markdown text with content obtained from other actions in the workflow, as well as a Go module that can update markdown text
@@ -34,7 +35,7 @@ A Go module that updates markdown text and is integrated as a GitHub Action.
 * If `confirm_and_push` is "false" committer detalis can be accessed via `outputs.commit_user`, `outputs.commit_email` & `outputs.commit_message` for further usage in the workflow.
 * The syntax mostly revolves around [GitHub Flavored Markdown parser](https://github.github.com/gfm/).
 * The `table` parameter is optional as `markdown_text` supports table markdown syntax by default but this parameter can be used as a simple alternative or any special use case. If `table` is "true":
-  - It uses [github.com/willabides/mdtable](https://godoc.org/github.com/willabides/mdtable) module 
+  - It uses [github.com/willabides/mdtable](https://godoc.org/github.com/willabides/mdtable) module.
   - `markdown_text` contents should follow these conditions:
     + Table row contents are seperated with ";" delimiter. First element will make up the table header.
     + For each element of table rows, table column contents are seperated with "," delimiter.
