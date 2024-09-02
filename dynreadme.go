@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	table "github.com/gnpaone/dynamic-update-readme/helpers"
+	table "github.com/willabides/mdtable"
 )
 
 // UpdateContent parses and updates content between markers
@@ -69,57 +69,57 @@ func parseTableOptions(tableOptions string) []table.Option {
 				}
 			}
 
-		case strings.HasPrefix(part, "colH-"):
-			colHParts := strings.Split(part, "-")
-			if len(colHParts) >= 3 {
-				colHNum := parseColumnNumber(colHParts[1])
-				switch colHParts[2] {
-				case "align":
-					if len(colHParts) == 4 {
-						alignment := parseAlignment(colHParts[3])
-						options = append(options, table.ColumnHeaderAlignment(colHNum, alignment))
-					}
-				}
-			}
+			// case strings.HasPrefix(part, "colH-"):
+			// 	colHParts := strings.Split(part, "-")
+			// 	if len(colHParts) >= 3 {
+			// 		colHNum := parseColumnNumber(colHParts[1])
+			// 		switch colHParts[2] {
+			// 		case "align":
+			// 			if len(colHParts) == 4 {
+			// 				alignment := parseAlignment(colHParts[3])
+			// 				options = append(options, table.ColumnHeaderAlignment(colHNum, alignment))
+			// 			}
+			// 		}
+			// 	}
 
-		case strings.HasPrefix(part, "colT-"):
-			colTParts := strings.Split(part, "-")
-			if len(colTParts) >= 3 {
-				colTNum := parseColumnNumber(colTParts[1])
-				switch colTParts[2] {
-				case "align":
-					if len(colTParts) == 4 {
-						alignment := parseAlignment(colTParts[3])
-						options = append(options, table.ColumnTextAlignment(colTNum, alignment))
-					}
-				}
-			}
+			// case strings.HasPrefix(part, "colT-"):
+			// 	colTParts := strings.Split(part, "-")
+			// 	if len(colTParts) >= 3 {
+			// 		colTNum := parseColumnNumber(colTParts[1])
+			// 		switch colTParts[2] {
+			// 		case "align":
+			// 			if len(colTParts) == 4 {
+			// 				alignment := parseAlignment(colTParts[3])
+			// 				options = append(options, table.ColumnTextAlignment(colTNum, alignment))
+			// 			}
+			// 		}
+			// 	}
 
-		case strings.HasPrefix(part, "head-"):
-			headParts := strings.Split(part, "-")
-			if len(headParts) >= 2 {
-				switch headParts[1] {
-				case "align":
-					if len(headParts) == 3 {
-						alignment := parseAlignment(headParts[2])
-						options = append(options, table.HeaderAlignment(alignment))
-					}
-				}
+			// case strings.HasPrefix(part, "head-"):
+			// 	headParts := strings.Split(part, "-")
+			// 	if len(headParts) >= 2 {
+			// 		switch headParts[1] {
+			// 		case "align":
+			// 			if len(headParts) == 3 {
+			// 				alignment := parseAlignment(headParts[2])
+			// 				options = append(options, table.HeaderAlignment(alignment))
+			// 			}
+			// 		}
 
-			}
+			// 	}
 
-		case strings.HasPrefix(part, "text-"):
-			textParts := strings.Split(part, "-")
-			if len(textParts) >= 2 {
-				switch textParts[1] {
-				case "align":
-					if len(textParts) == 3 {
-						alignment := parseAlignment(textParts[2])
-						options = append(options, table.TextAlignment(alignment))
-					}
-				}
+			// case strings.HasPrefix(part, "text-"):
+			// 	textParts := strings.Split(part, "-")
+			// 	if len(textParts) >= 2 {
+			// 		switch textParts[1] {
+			// 		case "align":
+			// 			if len(textParts) == 3 {
+			// 				alignment := parseAlignment(textParts[2])
+			// 				options = append(options, table.TextAlignment(alignment))
+			// 			}
+			// 		}
 
-			}
+			// 	}
 		}
 	}
 	return options
@@ -142,7 +142,7 @@ func parseColumnNumber(num string) int {
 	var colNum int
 	if _, err := fmt.Sscanf(num, "%d", &colNum); err != nil {
 		log.Fatalf("Error parsing column number: %s", err)
-    	}
+	}
 	return colNum
 }
 
@@ -150,7 +150,7 @@ func parseColumnWidth(width string) int {
 	var w int
 	if _, err := fmt.Sscanf(width, "%d", &w); err != nil {
 		log.Fatalf("Error parsing column width: %s", err)
-    	}
+	}
 	return w
 }
 
